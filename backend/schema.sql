@@ -27,3 +27,4 @@ create table if not exists public.registrations (
 create index if not exists events_organizer_id_idx on public.events (organizer_id);
 create index if not exists registrations_event_id_created_at_idx on public.registrations (event_id, created_at);
 create index if not exists registrations_user_id_created_at_idx on public.registrations (user_id, created_at desc);
+

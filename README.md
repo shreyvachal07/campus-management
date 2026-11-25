@@ -1,22 +1,19 @@
 # Campus Management
 
-CampusCue is a responsive campus-events dashboard served by a Flask/Supabase API.
+CampusCue is a responsive campus-events dashboard connected to a Flask and Supabase API.
+
+## Project structure
+
+```text
+frontend/   Dashboard HTML, CSS, and JavaScript
+backend/    Flask API, Supabase schema, and Python dependencies
+```
 
 ## Run locally
 
-1. In the repository root, create `.env` with `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (or `SUPABASE_SERVICE_ROLE_KEY`).
-2. Install dependencies: `pip install -r requirements.txt`.
-3. Run: `python app.py`.
-4. Open `http://localhost:5000`.
+1. Create `backend/.env` using `backend/.env.example` and enter your Supabase values.
+2. Install dependencies: `pip install -r backend/requirements.txt`.
+3. Run: `python backend/app.py`.
+4. Visit `http://localhost:5000`.
 
-The frontend loads real events from `GET /api/events`. Its RSVP controls post to `POST /api/registrations` once the signed-in user's UUID is assigned to `window.CAMPUS_USER_ID`; this prevents putting a Supabase secret in the browser.
-
-Use `schema.sql` to create the required tables before starting the API.
-
-## Deploy to Vercel
-
-1. Import this GitHub repository in Vercel; it detects the Flask application in `app.py`.
-2. Add `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (or `SUPABASE_SERVICE_ROLE_KEY`) under **Project Settings → Environment Variables**.
-3. Deploy. Vercel serves the dashboard from `public/` through its CDN and runs the Flask API as a Python function.
-
-Never add the Supabase secret to the frontend or commit the `.env` file.
+The backend serves the frontend and exposes the API at `/api/events` and `/api/registrations`. Do not put Supabase service keys in the frontend.

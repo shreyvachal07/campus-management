@@ -31,9 +31,9 @@ def load_local_env():
 load_local_env()
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent
-PUBLIC_DIR = PROJECT_ROOT / "public"
-app = Flask(__name__)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+FRONTEND_DIR = PROJECT_ROOT / "frontend"
+app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
 
 
 @app.after_request
@@ -48,7 +48,7 @@ def add_cors_headers(response):
 @app.get("/")
 def index():
     """Serve the dashboard and API from one Flask application."""
-    return send_from_directory(PUBLIC_DIR, "index.html")
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
 
 @app.get("/api")
@@ -241,3 +241,4 @@ def event_registrations(event_id: str):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")), debug=True)
+
