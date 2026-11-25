@@ -10,6 +10,26 @@ from supabase import Client, create_client
 app = Flask(__name__)
 
 
+@app.get("/")
+def index():
+    """A friendly landing response for the Render service URL."""
+    return jsonify(
+        {
+            "name": "Campus Management Event API",
+            "status": "ok",
+            "authentication": "disabled",
+            "endpoints": {
+                "health": "GET /health",
+                "events": "GET /api/events",
+                "event": "GET /api/events/{id}",
+                "create_registration": "POST /api/registrations",
+                "my_registrations": "GET /api/me/registrations?user_id={uuid}",
+                "event_registrations": "GET /api/events/{id}/registrations",
+            },
+        }
+    )
+
+
 def get_supabase() -> Client:
     """Create the server-side Supabase client only when a request needs it."""
     url = os.environ.get("SUPABASE_URL")
