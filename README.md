@@ -4,11 +4,11 @@ CampusCue is a responsive campus-events dashboard served by a Flask/Supabase API
 
 ## Run locally
 
-1. In `backend`, create `.env` with `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (or `SUPABASE_SERVICE_ROLE_KEY`).
-2. Install dependencies: `pip install -r backend/requirements.txt`.
-3. Run: `python backend/app.py`.
+1. In the repository root, create `.env` with `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (or `SUPABASE_SERVICE_ROLE_KEY`).
+2. Install dependencies: `pip install -r requirements.txt`.
+3. Run: `python app.py`.
 4. Open `http://localhost:5000`.
 
 The frontend loads real events from `GET /api/events`. Its RSVP controls post to `POST /api/registrations` once the signed-in user's UUID is assigned to `window.CAMPUS_USER_ID`; this prevents putting a Supabase secret in the browser.
 
-Use `backend/schema.sql` to create the required tables before starting the API.
+Use `schema.sql` to create the required tables before starting the API.
