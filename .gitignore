@@ -1,6 +1,5 @@
-.env
-.venv/
-venv/
+backend/.env
+backend/venv/
 __pycache__/
-*.py[cod]
-.pytest_cache/
+*.pyc
+.DS_Store

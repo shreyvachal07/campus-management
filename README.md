@@ -1,34 +1,14 @@
-# Event API backend
+# Campus Management
 
-Flask/Supabase backend implementing every endpoint in `api.png` against the three tables in `database.png`. Authentication and authorization are intentionally absent for now.
+CampusCue is a responsive campus-events dashboard served by a Flask/Supabase API.
 
-## Setup
+## Run locally
 
-1. Create the database tables by running [`schema.sql`](schema.sql) in the Supabase SQL editor, if they do not already exist.
-2. Copy `.env.example` values into your environment (or populate the existing `.env` file). The service-role key is used only by Flask and must not be exposed to the frontend.
-3. Activate the existing virtual environment and run:
+1. In `backend`, create `.env` with `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (or `SUPABASE_SERVICE_ROLE_KEY`).
+2. Install dependencies: `pip install -r backend/requirements.txt`.
+3. Run: `python backend/app.py`.
+4. Open `http://localhost:5000`.
 
-   ```powershell
-   .\venv\Scripts\Activate.ps1
-   $env:SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co"
-   $env:SUPABASE_SERVICE_ROLE_KEY = "your_service_role_key"
-   python app.py
-   ```
+The frontend loads real events from `GET /api/events`. Its RSVP controls post to `POST /api/registrations` once the signed-in user's UUID is assigned to `window.CAMPUS_USER_ID`; this prevents putting a Supabase secret in the browser.
 
-The server listens on `http://localhost:5000`.
-
-## API
-
-| Method | Endpoint | Notes |
-| --- | --- | --- |
-| GET | `/api/events` | Optional `status`, `limit`, and `offset` query parameters. |
-| GET | `/api/events/{id}` | Event details. |
-| POST | `/api/registrations` | Body: `{ "user_id": "uuid", "event_id": "uuid" }`; returns 201 or 409. |
-| GET | `/api/me/registrations?user_id={uuid}` | `user_id` replaces the unavailable current user until auth exists. |
-| GET | `/api/events/{id}/registrations` | Attendee list, public for now. |
-
-`POST /api/registrations` checks event availability (`upcoming` or `open`), duplicate registrations, and capacity. The database unique constraint additionally prevents duplicate registrations during concurrent requests.
-
-## Important temporary limitation
-
-Without authentication, anyone who knows a user UUID can read that user's registrations and everyone can read attendee lists. Before deploying, replace `user_id` in `/api/me/registrations` with the authenticated user and restrict the attendee-list endpoint to the event organizer.
+Use `backend/schema.sql` to create the required tables before starting the API.

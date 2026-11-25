@@ -1,43 +1,76 @@
 """Unauthenticated event-registration API backed by Supabase."""
 
 import os
+from pathlib import Path
 from uuid import UUID
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from supabase import Client, create_client
 
 
-app = Flask(__name__)
+# Load a project-local .env for `python app.py`; hosted services can inject
+# these settings directly into the process environment.
+def load_local_env():
+    env_path = Path(__file__).with_name(".env")
+    if not env_path.is_file():
+        return
+    for raw_line in env_path.read_text(encoding="utf-8-sig").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        name, value = line.split("=", 1)
+        name = name.strip()
+        value = value.strip()
+        if not name:
+            continue
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in ("'", '\"'):
+            value = value[1:-1]
+        os.environ.setdefault(name, value)
+
+
+load_local_env()
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+FRONTEND_DIR = PROJECT_ROOT / "frontend"
+app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
+
+
+@app.after_request
+def add_cors_headers(response):
+    """Allow the static frontend (or a local frontend dev server) to call the API."""
+    response.headers["Access-Control-Allow-Origin"] = os.environ.get("CORS_ORIGIN", "*")
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return response
 
 
 @app.get("/")
 def index():
-    """A friendly landing response for the Render service URL."""
-    return jsonify(
-        {
-            "name": "Campus Management Event API",
-            "status": "ok",
-            "authentication": "disabled",
-            "endpoints": {
-                "health": "GET /health",
-                "events": "GET /api/events",
-                "event": "GET /api/events/{id}",
-                "create_registration": "POST /api/registrations",
-                "my_registrations": "GET /api/me/registrations?user_id={uuid}",
-                "event_registrations": "GET /api/events/{id}/registrations",
-            },
-        }
-    )
+    """Serve the dashboard and API from one Flask application."""
+    return send_from_directory(FRONTEND_DIR, "index.html")
+
+
+@app.get("/api")
+def api_index():
+    return jsonify({"name": "Campus Management Event API", "status": "ok"})
 
 
 def get_supabase() -> Client:
     """Create the server-side Supabase client only when a request needs it."""
     url = os.environ.get("SUPABASE_URL")
-    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+    # Prefer a secret/service-role key for server-side operations. A publishable
+    # key can read data only when the project's grants and RLS policies allow it.
+    key = (
+        os.environ.get("SUPABASE_SECRET_KEY")
+        or os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+        or os.environ.get("SUPABASE_PUBLISHABLE_KEY")
+    )
     if not url or not key:
         raise RuntimeError(
-            "SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be configured. "
-            "Keep the service-role key on the server only."
+            "SUPABASE_URL and a Supabase key must be configured. "
+            "Set SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY on the server; "
+            "SUPABASE_PUBLISHABLE_KEY requires matching database permissions."
         )
     return create_client(url, key)
 
