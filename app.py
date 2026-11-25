@@ -123,24 +123,42 @@ def create_registration():
         return error("user_id and event_id must be UUIDs.", 400)
 
     try:
-        created = get_supabase().rpc(
-            "create_event_registration",
-            {"p_user_id": payload["user_id"], "p_event_id": payload["event_id"]},
+        db = get_supabase()
+        event_result = (
+            db.table("events")
+            .select("id,capacity,status")
+            .eq("id", payload["event_id"])
+            .limit(1)
+            .execute()
+        )
+        if not event_result.data:
+            return error("Event not found.", 404)
+        event = event_result.data[0]
+        if event["status"] not in ("open", "upcoming"):
+            return error("Event is not open for registration.", 409)
+
+        existing = (
+            db.table("registrations")
+            .select("id")
+            .eq("user_id", payload["user_id"])
+            .eq("event_id", payload["event_id"])
+            .limit(1)
+            .execute()
+        )
+        if existing.data:
+            return error("User is already registered for this event.", 409)
+
+        registrations = db.table("registrations").select("id").eq("event_id", payload["event_id"]).execute()
+        if len(registrations.data) >= event["capacity"]:
+            return error("Event is at capacity.", 409)
+
+        created = db.table("registrations").insert(
+            {"user_id": payload["user_id"], "event_id": payload["event_id"]}
         ).execute()
         return jsonify({"data": created.data[0]}), 201
     except Exception as exc:
-        # The SQL function locks the event row and performs these checks in one
-        # transaction, so concurrent requests cannot overfill an event.
         message = str(exc).lower()
-        if "event_not_found" in message:
-            return error("Event not found.", 404)
-        if "user_not_found" in message:
-            return error("User not found.", 404)
-        if "event_not_open" in message:
-            return error("Event is not open for registration.", 409)
-        if "event_at_capacity" in message:
-            return error("Event is at capacity.", 409)
-        if "duplicate_registration" in message or "duplicate key" in message or "registrations_user_event_key" in message:
+        if "duplicate key" in message or "registrations_user_event_key" in message:
             return error("User is already registered for this event.", 409)
         return database_error(exc)
 

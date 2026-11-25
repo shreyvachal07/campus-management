@@ -27,7 +27,7 @@ The server listens on `http://localhost:5000`.
 | GET | `/api/me/registrations?user_id={uuid}` | `user_id` replaces the unavailable current user until auth exists. |
 | GET | `/api/events/{id}/registrations` | Attendee list, public for now. |
 
-`POST /api/registrations` checks event availability, duplicate registrations, and capacity. The database unique constraint additionally prevents duplicate registrations during concurrent requests.
+`POST /api/registrations` checks event availability (`upcoming` or `open`), duplicate registrations, and capacity. The database unique constraint additionally prevents duplicate registrations during concurrent requests.
 
 ## Important temporary limitation
 
