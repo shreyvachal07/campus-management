@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CampusCue | Student Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#"><span class="brand-mark">C</span><span>CampusCue</span></a>
+      <nav><a href="#events">Discover</a><a href="#guide">Campus guide</a><a href="#wellbeing">Wellbeing</a></nav>
+      <label class="search"><span>Ã¢Å’â€¢</span><input placeholder="Search campus events" /></label>
+      <button class="create">Ã¯Â¼â€¹ Create event</button>
+      <button class="bell" aria-label="Notifications">Ã¢â„¢Å¸<i></i></button>
+      <button class="profile"><span>SK</span><b>Sarah Jenkins</b><small>Student</small></button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <span class="eyebrow">TUESDAY, OCTOBER 22</span>
+          <h1>Welcome back, Sarah! What are you<br />getting involved in today?</h1>
+          <p>Here's what's happening around campus. Pick an event, meet your people, and make today count.</p>
+          <div class="filters"><button>Ã¢ËœÂ· All events</button><button class="active">For you</button><button>Today</button><button>This week</button><button>CategoriesÃ¢Å’â€ž</button></div>
+        </div>
+        <div class="stats"><div><b>3</b><span>saved</span></div><div><b>1</b><span>attending</span></div><div><b>2</b><span>new</span></div></div>
+      </section>
+
+      <div class="layout">
+        <div class="feed">
+          <section class="featured">
+            <article class="feature-copy">
+              <span class="tag coral">FEATURED THIS WEEK</span>
+              <h2>Campus Paws &amp; Pause:<br />Therapy Dog De-Stress<br />Lounge &amp; Herbal Tea Bar</h2>
+              <p>Take a breather with furry friends, calming tea and a cozy outdoor study break.</p>
+              <p class="meta">Ã¢â€”Â· Today, 12:00Ã¢â‚¬â€œ2:00 PM &nbsp; Ã‚Â· &nbsp; Ã¢â€”â€° Student Green</p>
+              <div class="capacity"><span>Campus capacity</span><b>78% seats remaining</b><i><em></em></i></div>
+              <footer><button class="rsvp">Ã¢Å“â€œ RSVP now</button><button class="save">Ã¢â„¢Â¡ Save for later</button><span class="faces">Ã¢â€”Â Ã¢â€”Â Ã¢â€”Â</span></footer>
+            </article>
+            <div class="feature-photo" role="img" aria-label="Students relaxing in a campus garden"></div>
+          </section>
+
+          <section id="events" class="events">
+            <div class="section-title"><h2>Upcoming Campus Events &amp; Sessions</h2><a href="#">View all Ã¢â€ â€™</a></div>
+            <div class="event-grid" id="eventGrid"></div>
+          </section>
+
+          <section id="guide" class="guide">
+            <div class="section-title"><h2>Ã¢â€“Â¥ Interactive Guide &amp; Hall Navigator</h2><span>NEW STUDENT ESSENTIAL</span></div>
+            <p>Locate classrooms, study nooks, food spots, clubs and essential services on campus.</p>
+            <div><span>Ã¢Å“Â¦</span><p><b>Not sure where to start?</b><br />Build a route for your day in seconds.</p><button>Browse map</button></div>
+          </section>
+        </div>
+
+        <aside>
+          <section class="ticket"><div class="aside-head"><span>Ã¢â€“Â£</span><b>My Active Campus Pass</b><small>ACTIVE</small></div><h3>QR Everything Tech Talk &amp; Mixer</h3><p>Ã¢â€”Â· Today, 5:30 PM Ã‚Â· Innovation Hub</p><div class="qr">Ã¢â€“Â£<span>Ã¢â€“Âª Ã¢â€“Âª Ã¢â€“Âª<br />Ã¢â€“Âª Ã¢â€“Âª Ã¢â€“Âª<br />Ã¢â€“Âª Ã¢â€“Âª Ã¢â€“Âª</span></div><div class="ticket-actions"><button>Ã¢Å’Â Apple / Google</button><button>Ã¢â€ â€” Share ticket</button></div></section>
+          <section id="wellbeing" class="wellbeing"><div class="section-title"><h2>Care &amp; Wellbeing Hub</h2><i></i></div><p>Small support options for your week.</p><a href="#"><span>Ã¢â„¢Å“</span><b>24/7 Peer Counsellor Chat</b><em>Ã¢â‚¬Âº</em></a><a href="#"><span>Ã¢â€“Â¤</span><b>Campus Calm Space</b><em>Ã¢â‚¬Âº</em></a><a href="#"><span>Ã¢ËœÂ¼</span><b>De-Stress Quiet Pods</b><em>Ã¢â‚¬Âº</em></a><div class="notice">Ã¢ÂÂ¤ Need help navigating this semester?<br /><b>Reach out. We're here to help.</b></div></section>
+          <section class="profile-card"><div class="section-title"><h2>Sarah's Wellness Pulse</h2><a href="#">VIEW DETAILS</a></div><div><span>Ã¢â„¢Â§</span><p><b>4/5</b> A mindful break today?<br /><small>You're doing great. Keep checking in.</small></p></div></section>
+        </aside>
+      </div>
+    </main>
+    <footer class="site-footer"><div><a class="brand" href="#"><span class="brand-mark">C</span><span>CampusCue</span></a><p>Find your people and make more of campus life.</p></div><div><b>EXPLORE</b><a href="#">What's on today</a><a href="#">Clubs &amp; societies</a><a href="#">Campus resources</a></div><div><b>STUDENT SUPPORT</b><a href="#">Wellbeing &amp; counselling</a><a href="#">Accessibility support</a><a href="#">Safety on campus</a></div><div class="feedback"><b>Ã¢Ëœâ€¦ CampusCue Updates</b><p>Get weekly picks and a little nudge to try something new.</p><button>Join the list</button></div></footer>
+    <script src="app.js"></script>
+  </body>
+</html>
+
+
