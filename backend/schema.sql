@@ -28,3 +28,17 @@ create index if not exists events_organizer_id_idx on public.events (organizer_i
 create index if not exists registrations_event_id_created_at_idx on public.registrations (event_id, created_at);
 create index if not exists registrations_user_id_created_at_idx on public.registrations (user_id, created_at desc);
 
+-- Development/demo data. Safe to run repeatedly because IDs are fixed.
+insert into public.users (id, email, role)
+values ('00000000-0000-0000-0000-000000000001', 'organizer@campuscue.demo', 'organizer')
+on conflict (id) do nothing;
+
+insert into public.events (id, organizer_id, title, capacity, status)
+values
+  ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000001', 'Mindfulness & Sound Bath Meditation', 40, 'open'),
+  ('00000000-0000-0000-0000-000000000102', '00000000-0000-0000-0000-000000000001', 'Engineering Hackathon & Career Mentorship', 80, 'upcoming'),
+  ('00000000-0000-0000-0000-000000000103', '00000000-0000-0000-0000-000000000001', 'Campus Farmers Market & Nutrition Demo', 60, 'upcoming'),
+  ('00000000-0000-0000-0000-000000000104', '00000000-0000-0000-0000-000000000001', 'Late-Night Study Cafe: Peer Exam Prep', 30, 'open'),
+  ('00000000-0000-0000-0000-000000000105', '00000000-0000-0000-0000-000000000001', 'First-Gen Student Peer Connection Dinner', 50, 'upcoming'),
+  ('00000000-0000-0000-0000-000000000106', '00000000-0000-0000-0000-000000000001', 'Sunset Yoga on the Great Lawn', 45, 'upcoming')
+on conflict (id) do nothing;

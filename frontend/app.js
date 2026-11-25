@@ -16,7 +16,10 @@ const eventImages = [
 
 function renderEvents(events) {
   document.querySelector('#eventGrid').innerHTML = events.map(([title,time,place,img,action, id]) => `<article class="event-card"><img src="${img}" alt="" /><div><h3>${title}</h3><p>â—· ${time}</p><p>âŒ– ${place}</p><footer><span>â™¡</span><button data-event-id="${id || ''}">${action}</button></footer></div></article>`).join('');
-  document.querySelectorAll('.event-card button').forEach(button => button.addEventListener('click', () => register(button)));
+  document.querySelectorAll('.event-card button').forEach(button => {
+    if (button.dataset.eventId) button.addEventListener('click', () => register(button));
+    else button.disabled = true;
+  });
 }
 
 async function loadEvents() {
@@ -27,7 +30,11 @@ async function loadEvents() {
     if (!data.length) return renderEvents(fallbackEvents);
     renderEvents(data.map((event, index) => [event.title, event.status === 'open' ? 'Open for registration' : 'Coming soon', `${event.capacity} places available`, eventImages[index % eventImages.length], 'RSVP now', event.id]));
   } catch (_) {
-    renderEvents(fallbackEvents);
+    renderEvents(fallbackEvents.map(event => [...event.slice(0, 5), '']));
+    const notice = document.createElement('p');
+    notice.className = 'database-notice';
+    notice.textContent = 'Database unavailable. Run backend/schema.sql and configure Supabase environment variables to enable RSVP.';
+    document.querySelector('#eventGrid').before(notice);
   }
 }
 
@@ -48,4 +55,3 @@ async function register(button) {
 loadEvents();
 document.querySelectorAll('.filters button').forEach(button => button.addEventListener('click', () => { document.querySelector('.filters .active').classList.remove('active'); button.classList.add('active'); }));
 document.querySelector('.rsvp').addEventListener('click', e => { e.currentTarget.textContent = 'âœ“ Youâ€™re going'; e.currentTarget.classList.add('confirmed'); });
-
